@@ -1,8 +1,17 @@
 MAKE_DEBUG     = 1
 
 DEBUG          = -gdwarf-2
-WARNING        = -pedantic -Wall -Werror -Wstrict-prototypes
-PROGRAMMER     = jtagmkII
+WALMOSTALL 	= -Waddress -Warray-bounds=1 -Wbool-compare -Wbool-operation \
+		  -Wchar-subscripts -Wcomment -Wenum-compare -Wformat -Wint-in-bool-context -Wimplicit -Wimplicit-int \
+		  -Wimplicit-function-declaration -Winit-self -Wlogical-not-parentheses -Wmain -Wmaybe-uninitialized \
+		  -Wmemset-elt-size -Wmemset-transposed-args -Wmisleading-indentation -Wmissing-braces -Wno-attributes \
+		  -Wnarrowing -Wnonnull -Wnonnull-compare -Wopenmp-simd -Wparentheses -Wno-pointer-sign \
+		  -Wpointer-sign -Wrestrict -Wreturn-type -Wsequence-point -Wsign-compare \
+		  -Wsizeof-pointer-memaccess -Wstrict-aliasing -Wstrict-overflow=1 -Wswitch -Wtautological-compare -Wtrigraphs \
+		  -Wuninitialized -Wunknown-pragmas -Wunused-function -Wunused-label -Wunused-value -Wunused-variable \
+		  -Wvolatile-register-var
+WARNING        = -pedantic $(WALMOSTALL) -Werror -Wunused-macros -Wduplicate-decl-specifier -Wno-error -Wstrict-prototypes
+PROGRAMMER     = wiring
 PROG_PORT      = usb
 FLASHCMD       = avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) -U flash:w:# no space at the end
 #FLASHCMD       = avrdude -p $(MCU_TARGET) -c usbasp -U flash:w:# no space at the end

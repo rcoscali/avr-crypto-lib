@@ -17,6 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SHELL = sh
+V ?= @
 
 include Makefile_sys_conf.inc
 include Makefile_m2560_conf.inc

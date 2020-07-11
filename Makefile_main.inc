@@ -70,18 +70,18 @@ endef
 
 define TargetSource_Template
 $(1): $(2)
-	@mkdir -p  $(dir $(1)) $(DEP_DIR)
+	$(V)mkdir -p  $(dir $(1)) $(DEP_DIR)
 	@echo "[cc]: $(1) <-- $(2)"
-	@$(CC) $(CFLAGS_A) $(addprefix -I./,$(3)) $(addprefix -D, $(4)) -c -o $(1) $(2)
+	$(V)$(CC) $(CFLAGS_A) $(addprefix -I./,$(3)) $(addprefix -D, $(4)) -c -o $(1) $(2)
 endef
 
 
 
 define TargetSourceList_Template
 $(1): $(2)
-	@mkdir -p $(dir $(1)) $(DEP_DIR)
+	$(V)mkdir -p $(dir $(1)) $(DEP_DIR)
 	@echo "[lst]: $(1) <-- $(2)"
-	@$(CC) $(CFLAGS_A) $(addprefix -I./,$(3)) $(addprefix -D, $(4)) $(LIST_OPT) -c -o /dev/null $(2) > $(1)
+	$(V)$(CC) $(CFLAGS_A) $(addprefix -I./,$(3)) $(addprefix -D, $(4)) $(LIST_OPT) -c -o /dev/null $(2) > $(1)
 endef
 
 # ----------------------------------------------------------------------------
@@ -148,9 +148,9 @@ $(foreach a, $(EXTRALINK), \
 
 define MainTestElf_Template
 $(1): $(2) $(3) $(4)
-	@mkdir -p $(dir $(1))
+	$(V)mkdir -p $(dir $(1))
 	@echo "[ld]: $(1)"
-	@$(CC) $(CFLAGS_A) $(LDFLAGS)$(patsubst %.elf,%.map,$(1)) -o \
+	$(V)$(CC) $(CFLAGS_A) $(LDFLAGS)$(patsubst %.elf,%.map,$(1)) -o \
 	$(1) \
 	$(2) $(3) $(EXTRALINK_BINOBJ)\
 	$(LIBS)
@@ -174,7 +174,7 @@ all: $(foreach algo, $(ALGORITHMS), $($(algo)_BINOBJ))
 define MakeDir_TEMPLATE
 $(1):
 	@echo [mkdir] $(1)
-	@mkdir -p $(1)
+	$(V)mkdir -p $(1)
 endef
 
 $(foreach d, DEP_DIR BIN_DIR TESTSRC_DIR TESTLOG_DIR SPEEDLOG_DIR SIZE_DIR LIST_DIR STAT_DIR, $(eval $(call MakeDir_TEMPLATE, \
@@ -209,11 +209,11 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call Listing_TEMPLATE, \
 
 %.hex: %.elf
 	@echo "[objcopy]: $@"
-	@$(OBJCOPY) -j .text -j .data -O ihex $< $@
+	$(V)$(OBJCOPY) -j .text -j .data -O ihex $< $@
 ifdef HASH_TOOL
 ifneq ($(HASH_TOOL),)
 	@echo -n "[$(HASH_TOOL)]: "
-	@$(HASH_TOOL) $@
+	$(V)$(HASH_TOOL) $@
 endif
 endif
 
@@ -222,7 +222,7 @@ endif
 define Flash_Template
 $(1)_FLASH: $(2)
 	@echo "[flash]: $(2)"
-	@$(FLASHCMD)$(call first,$(2))
+	$(V)$(FLASHCMD)$(call first,$(2))
 endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call Flash_Template, \
@@ -234,7 +234,7 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call Flash_Template, \
 
 define Speed_Template
 $(1)_SPEED:  $(1)_FLASH
-	@$(RUBY) $(SPEEDTOOL) -c $(SPEEDCMD) -t $(SPEEDLOG_DIR) -a $(call lc, $(1))
+	$(V)$(RUBY) $(SPEEDTOOL) -c $(SPEEDCMD) -t $(SPEEDLOG_DIR) -a $(call lc, $(1))
 endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call Speed_Template, \
@@ -251,8 +251,8 @@ blockcipher_speed: $(foreach algo, $(BLOCK_CIPHERS), $(algo)_SPEED)
 define Size_Template
 $(1):  $(2)
 	@echo "[size] $(3)"
-	@mkdir -p $(dir $(1))
-	@$(SIZE) $(2) > $(1)
+	$(V)mkdir -p $(dir $(1))
+	$(V)$(SIZE) $(2) > $(1)
 endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call Size_Template, \
@@ -262,8 +262,8 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call Size_Template, \
 define Size_Template
 $(1)_SIZE:  $(2)
 	@echo "[size] $(1)"
-	@mkdir -p $(dir $(strip $(SIZE_DIR))$(strip $(call lc, $(1))).size)
-	@$(SIZE) $(2) > $(strip $(SIZE_DIR))$(strip $(call lc, $(1))).size
+	$(V)mkdir -p $(dir $(strip $(SIZE_DIR))$(strip $(call lc, $(1))).size)
+	$(V)$(SIZE) $(2) > $(strip $(SIZE_DIR))$(strip $(call lc, $(1))).size
 endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call GenericTarget_Template, \
@@ -293,9 +293,9 @@ tests: $(foreach a, $(ALGORITHMS), $(a)_TESTBIN)
 define TestRun_Template
 $(1)_TESTRUN: $(1)_FLASH
 	@echo "[reset]"
-	@sleep 3
-	@$(RESETCMD)
-	@sleep 1
+	$(V)sleep 3
+	$(V)$(RESETCMD)
+	$(V)sleep 1
 	@echo "[test]: $(1)"
 	$(RUBY) $(GET_TEST) $(TESTPORT) $(TESTPORTBAUDR) 8 1 nessie $(TESTLOG_DIR)$(TESTPREFIX) $(2)
 endef

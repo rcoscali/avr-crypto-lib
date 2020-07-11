@@ -403,9 +403,5 @@ none_str:
 yes_str:
 .asciz "yes "
 sep2_str:
-.asciz" \t - 0x"
+.asciz "\t - 0x"
 .byte 0
-
-
-
-

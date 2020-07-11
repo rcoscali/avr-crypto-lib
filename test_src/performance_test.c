@@ -38,6 +38,9 @@
 #ifdef ATMEGA644
 	#define TIMSK TIMSK1
 #endif
+#ifdef ATMEGA2560
+	#define TIMSK TIMSK0
+#endif
 
 
 
