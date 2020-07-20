@@ -17,9 +17,9 @@ WARNING    	= -pedantic $(WALMOSTALL) -Werror -Wunused-macros -Wduplicate-decl-s
 PROGRAMMER 	= wiring
 PROG_PORT   	= /dev/ttyUSB0
 DEFS      	= -D$(call uc, $(MCU_TARGET)) -DF_CPU=$(F_CPU)
-FLASHCMD    	= avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) -U flash:w:# no space at the end
-#FLASHCMD    	= avrdude -p $(MCU_TARGET) -c usbasp -U flash:w:# no space at the end
-#RESETCMD   	= avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) 
+FLASHCMD    	= avrdude -C./bin/avrdude/etc/avrdude.conf -v -p$(MCU_TARGET) -P$(PROG_PORT) -c$(PROGRAMMER) -D -Uflash:w:\$(PRG).hex:i
+#FLASHCMD    	= avrdude -C./bin/avrdude/etc/avrdude.conf -v -p$(MCU_TARGET) -cusbasp -Uflash:w:\$(PRG).hex:i
+#RESETCMD   	= avrdude -C./bin/avrdude/etc/avrdude.conf -v -p$(MCU_TARGET) -P$(PROG_PORT) -c$(PROGRAMMER) 
 RESETCMD   	= avarice -2 -R -j usb
 DEP_DIR    	= deps/
 TEST_DIR   	= test/

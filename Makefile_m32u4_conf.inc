@@ -1,5 +1,5 @@
 
-MCU_TARGET     = atmega2560
+MCU_TARGET     = atmega32u4
 F_CPU          = 16000000
 OPTIMIZE       = -Os # -Os
 EXTRALINK      = 

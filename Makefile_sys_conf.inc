@@ -13,15 +13,13 @@ WALMOSTALL 	= -Waddress -Warray-bounds=1 -Wbool-compare -Wbool-operation \
 WARNING        = -pedantic $(WALMOSTALL) -Werror -Wunused-macros -Wduplicate-decl-specifier -Wno-error -Wstrict-prototypes
 PROGRAMMER     = wiring
 PROG_PORT      = usb
-FLASHCMD       = avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) -U flash:w:# no space at the end
-#FLASHCMD       = avrdude -p $(MCU_TARGET) -c usbasp -U flash:w:# no space at the end
-#RESETCMD       = avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) 
+FLASHCMD       = avrdude -C./bin/avrdude/etc/avrdude.conf -v -p$(MCU_TARGET) -P$(PROG_PORT) -c$(PROGRAMMER) -D -Uflash:w:\$(PRG).hex:i
 RESETCMD       = avarice -2 -R -j usb
 DEP_DIR        = deps/$(BOARD_NAME)/#
 TEST_DIR       = test/#
 BIN_DIR        = bin/$(BOARD_NAME)/#
 TESTSRC_DIR    = test_src/
-#uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
+
 ERASECMD       =
 TESTPORT       = /dev/ttyUSB0
 TESTPORTBAUDR  = 115200
